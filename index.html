@@ -3,56 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amex web</title>
+    <title>amex coin website</title>
     <link rel="stylesheet" href="style.css">
+    </head>
+ <title>M-PESA Payment</title>
+    <style>
+  
+  </style>    
 </head>
 <body>
-    <div class="main">
-        <div class="navbar">
-            <div class="icon">
-                <h2 class="logo">AMEX</h2>
-            </div>
+  <div class="container">
+    <img src="https://cdn-icons-png.flaticon.com/512/684/684809.png" alt="phone icon">
+    <h2>M-Pesa Payment</h2>
+    <p>Enter your M-Pesa number and amount to receive an STK push</p>
+    <script>
+  async function makePayment() {
+    const phone = document.getElementById("mpesa").value.trim();
+    const amount = document.getElementById("amount").value.trim();
+    const responseBox = document.getElementById("response");
 
-            <div class="menu">
-                <ul>
-                    <li><a href="#">HOME</a></li>
-                    <li><a href="#">SERVICES</a></li>
-                    <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">CONTACT</a></li>
-                    <li><a href="#">DESIGN</a></li>
-                </ul>
-            </div>
+    if (!phone || !amount) {
+      responseBox.innerText = "⚠️ Please enter phone and amount.";
+      return;
+    }
 
-            <div class="search">
-                <input class="srch" type="search" name="" placeholder="Type To search">
-                <a href="#"><button class="btn">Search</button></a>
-            </div>
-            <div class="content">
-                <div class="text-section">
-                <h1>Crafting sleek, powerful and userfriendly platform </h1>
-               <h2><span>AMEX</span></h2>
-                    <p class="par">We do the best cryptocurrency investment. Get started with us now.</p>
-                <a href="#"><button class="cn">Invest with us</button></a>
+    try {
+      const res = await fetch("http://localhost:3000/stkpush", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount })
+      });
 
-                </div>
-                <div class="form"
->                    <h2>LOGIN<i class="fa-regular fa-user"></i></h2>
-                    <input type="email" name="" placeholder="Enter your email here">
-                    <input type="password" name="" placeholder="Enter your password here">
-                    <a href="#"><button class="btnn">LOGIN</button></a>
+      const data = await res.json();
+      console.log(data);
 
-                    <p class="par">Don't have an account?<a href="#"> SIGN UP </a>here</p>
-                    <p clss="liwth">Login with</p>
-
-                    <div class="icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-
-
-                    <p class="par">Forgot password?<a href="#"> CLICK HERE </a></p>
+      if (data.errorMessage) {
+        responseBox.innerText = "❌ " + data.errorMessage;
+      } else {
+        responseBox.innerText = "✅ Check your phone for STK push!";
+      }
+    } catch (err) {
+      responseBox.innerText = "❌ Error: " + err.message;
+    }
+  }
+</script>
 
 
 
+    <form onsubmit="makePayment(); return false;"></form>
+        <input type="text" id="phone" placeholder="Enter Phone (2547...)" required>
+       <input type="number" id="amount" placeholder="Enter Amount" required>
+      <div class="amount-input">
+        
+      </div>
+      <div class="hint">Minimum: KES 100 · Maximum: KES 150,000</div>
+
+      <button onclick="makePayment()">PAY NOW</button>
+      <p id="response"></p>
+       <div class="container"></div>
+
+       
+  
+  
+</div>
+
+      
+    </div>
+  </div>
+</form>
+<script>
+  async function makePayment() {
+    const phone = document.getElementById("phone").value;
+    const amount = document.getElementById("amount").value;
+    const responseBox = document.getElementById("response");
+
+    if (!phone || !amount) {
+      responseBox.textContent = "⚠️ Please fill in all fields.";
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/stkpush", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount })
+      });
+
+      const data = await res.json();
+      console.log(data);
+      responseBox.textContent = "✅ STK Push request sent. Check your phone!";
+    } catch (error) {
+      console.error(error);
+      responseBox.textContent = "❌ Error sending request.";
+    }
+  }
+</script>
 
 </body>
 </html>
-
